@@ -470,7 +470,7 @@ const MapZone* GameMap::getZoneAt(float px, float py) const {
 
 Vector2 GameMap::findSpawnPoint() const {
     if (!areas.empty()) {
-        const auto& firstArea = areas[30];
+        const auto& firstArea = areas[0];
         for (const auto& zone : firstArea.zones) {
             if (zone.type == ZoneType::Safe) {
                 return Vector2(

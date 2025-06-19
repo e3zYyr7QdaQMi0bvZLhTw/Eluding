@@ -267,50 +267,38 @@ void EntityManager::updateEnemies(float deltaTime) {
 
             Entity playerEntity(client.state.x, client.state.y, client.state.radius, 0.0f);
 
-            if (enemy->isCollidingWith(playerEntity)) {
-                if (enemy->isHarmless()) {
-                    continue;
-                }
+            if (!enemy->isCollidingWith(playerEntity)) continue;
+            if (enemy->isHarmless()) continue;
 
-                Enemy::Type enemyType = enemy->getType();
+            Enemy::Type enemyType = enemy->getType();
 
-                if (enemyType == Enemy::Type::Normal) {
-                    m_server->m_playerManager->downPlayer(client);
-                }
-                else if (enemyType == Enemy::Type::Cursed) {
+            switch (enemyType) {
+                case Enemy::Type::Expander:
+                    m_server->m_playerManager->handleExpanderCollision(client, enemy.get());
+                    break;
+
+                case Enemy::Type::Cursed:
                     m_server->m_playerManager->cursePlayer(client);
                     enemy->makeHarmless(1.5f);
-                }
-                else if (enemyType == Enemy::Type::Wall) {
-                    m_server->m_playerManager->downPlayer(client);
-                }
-                else if (enemyType == Enemy::Type::Slowing) {
-                    m_server->m_playerManager->downPlayer(client);
-                }
-                else if (enemyType == Enemy::Type::Immune) {
-                    m_server->m_playerManager->downPlayer(client);
-                }
-                else if (enemyType == Enemy::Type::Wavering) {
-                    m_server->m_playerManager->downPlayer(client);
-                }
-                else if (enemyType == Enemy::Type::Expander) {
-                    m_server->m_playerManager->handleExpanderCollision(client, enemy.get());
-                }
-                else if (enemyType == Enemy::Type::Silence) {
-                    m_server->m_playerManager->downPlayer(client);
-                }
-                else if (enemyType == Enemy::Type::SniperBullet) {
+                    break;
+
+                case Enemy::Type::SniperBullet:
                     m_server->m_playerManager->downPlayer(client);
                     enemy->makeHarmless(0.1f);
-                }
-                else if (enemyType == Enemy::Type::Sniper) {
+                    break;
+
+                case Enemy::Type::Normal:
+                case Enemy::Type::Wall:
+                case Enemy::Type::Slowing:
+                case Enemy::Type::Immune:
+                case Enemy::Type::Wavering:
+                case Enemy::Type::Silence:
+                case Enemy::Type::Sniper:
+                case Enemy::Type::Dasher:
                     m_server->m_playerManager->downPlayer(client);
-                }
-                else if (enemyType == Enemy::Type::Dasher) {
-                    m_server->m_playerManager->downPlayer(client);
-                }
-                break;
+                    break;
             }
+            break;
         }
     }
 }

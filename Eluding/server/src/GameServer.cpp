@@ -18,7 +18,7 @@ GameServer::GameServer(int port) : m_port(port), m_running(true), m_nextClientId
         m_socket.bind(port);
         m_socket.setNonBlocking(true);
         std::cout << "Server started on port " << port << std::endl;
-        std::cout << "Server running at 120 TPS" << std::endl;
+        std::cout << "Server running at 240 TPS" << std::endl;
 
         m_areaManager = std::make_unique<AreaManager>(this);
         m_entityManager = std::make_unique<EntityManager>(this);
@@ -44,7 +44,7 @@ void GameServer::run() {
     auto lastClientCleanupTime = lastUpdateTime;
     auto lastEnemySpawnTime = lastUpdateTime;
 
-    const float targetFrameTime = 1.0f / 120.0f;
+    const float targetFrameTime = 1.0f / 240.0f;
 
     while (m_running) {
         auto currentTime = std::chrono::steady_clock::now();
@@ -91,7 +91,7 @@ void GameServer::updateGameState(float deltaTime) {
             const auto& input = m_playerInputs[id];
 
             const float DEFAULT_SLIDE_FRICTION = 0.75f;
-            const float BASE_TPS = 120.0f;
+            const float BASE_TPS = 240.0f;
 
             float speed = DEFAULT_PLAYER_SPEED;
             float friction = 1.0f;
